@@ -187,6 +187,34 @@ app.get('/dashboard/:USERID', (req, res) => {
 
 });
 
+app.post('/dashboard/:USERID/new'), (req, res) => {
+
+    const sql_input_report_assessment = "INSERT INTO reports (`UserID`, `Report_Text`, `Report_analysis`) VALUES (?);"
+
+    // implement slither assessment here which forms both variables -> report_text and report_analysis
+
+    let values = [
+
+        req.params.USERID,
+        report_text,
+        report_analysis
+
+    ]
+
+    db.query(sql_input_report_assessment, [values], (err, data) => {
+
+        if (err) {
+
+            return res.json(err);
+
+        }
+
+        return res.json(["Success", req.params.USERID]);
+
+    })
+
+}
+
 app.listen(8081, () => {
 
     console.log("listening");

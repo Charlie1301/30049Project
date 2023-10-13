@@ -94,7 +94,7 @@ export const BackButton = styled(Link)`
 
 `;
 
-export const AnalysisButton = styled(Link)`
+export const AnalysisButton = styled.button`
 
     text-decoration: none;
     background: linear-gradient(

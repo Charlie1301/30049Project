@@ -1,5 +1,5 @@
 import React from "react";
-import {Link} from "react-router-dom";
+import Dashboard from "../Components/Dashboard/Dashboard";
 
 const Dashboard = () => {
 
@@ -7,9 +7,7 @@ const Dashboard = () => {
 
         <>
 
-            <p>dashboard</p>
-
-            <Link to="/dashboard/2/new" >new report</Link>
+            <Dashboard />
 
         </>
 
