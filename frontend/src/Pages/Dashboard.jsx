@@ -1,7 +1,7 @@
 import React from "react";
-import Dashboard from "../Components/Dashboard/Dashboard";
+import Dashboard from "../Components/Dashboard/PrevReport.jsx";
 
-const Dashboard = () => {
+const dashboard = () => {
 
     return (
 
@@ -15,4 +15,4 @@ const Dashboard = () => {
 
 };
 
-export default Dashboard
+export default dashboard

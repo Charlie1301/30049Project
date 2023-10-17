@@ -1,5 +1,6 @@
-import React from "react";
+import React, {useState} from "react";
 import {useNavigate, useLocation} from 'react-router-dom';
+import axios from 'axios';
 
 import {
 
@@ -25,7 +26,7 @@ const NewReport = () => {
 
     const handleFile = (event) => {
 
-        if (".sol" in eveent.target.files[0].name) {
+        if (".sol" in event.target.files[0].name) {
 
             setFile(event.target.files[0])
 
