@@ -26,9 +26,15 @@ db.query("CREATE TABLE `authentication` (`name` VARCHAR(20) NOT NULL , `email` V
 
 db.query("DROP TABLE IF EXISTS reports;")
 
-db.query("CREATE TABLE `reports` (`reportID` INT NOT NULL AUTO_INCREMENT , `userID` INT NOT NULL , `reportText` TEXT NOT NULL , `reportAnalysis` TEXT NOT NULL , `date` DATETIME on update CURRENT_TIMESTAMP NOT NULL , PRIMARY KEY (`reportID`)) ENGINE = InnoDB;")
+db.query("CREATE TABLE `reports` (`reportID` INT NOT NULL AUTO_INCREMENT , `userID` INT NOT NULL , `name` TEXT NOT NULL, `date` DATETIME on update CURRENT_TIMESTAMP NOT NULL , PRIMARY KEY (`reportID`)) ENGINE = InnoDB;")
 
+db.query("DROP TABLE IF EXISTS error_instances;")
 
+db.query("CREATE TABLE `error_instances` (`reportID` INT NOT NULL, `position` TEXT(30) NOT NULL, `error` TEXT(30) NOT NULL);")
+
+db.query("DROP TABLE IF EXISTS errors;")
+
+db.query("CREATE TABLE `errors` (`error` TEXT(30) NOT NULL, `reccomendation` TEXT(100) NOT NULL, UNIQUE(error);")
 
 app.post('/signup', (req, res) => {
 
@@ -165,7 +171,7 @@ app.get('/login/:email', (req, res) => {
 
 app.get('/dashboard/:USERID', (req, res) => {
 
-    const sql_get_report_ids = "SELECT reportID, date FROM reports WHERE `UserID` = ?;";
+    const sql_get_report_ids = "SELECT reportID, userID, date FROM reports WHERE `userID` = ?;";
 
     let userid = req.params.USERID
 
@@ -187,6 +193,8 @@ app.get('/dashboard/:USERID', (req, res) => {
 
         if (data__.length > 0) {
 
+            console.log(data__)
+
             return data__;
 
         } else {
@@ -201,7 +209,13 @@ app.get('/dashboard/:USERID', (req, res) => {
 
 app.post('/dashboard/:USERID/new'), (req, res) => {
 
-    const sql_input_report_assessment = "INSERT INTO reports (`rserID`, `reportText`, `reportAnalysis`) VALUES (?);"
+    const sql_reports_query = "INSERT INTO reports (`userID`, `name`, `reportText`, `reportAnalysis`) VALUES (?);"
+
+    const sql_error_instances_query = "INSERT INTO error_instances (`reportID`, `position`, `error`) VALUES (?);"
+
+    const sql_errors_query = "INSERT INTO errors (`error`, `reccomendation`) VALUES (?);"
+
+    const sql_get_report_id = "SELECT reportID WHERE `userID` = ? AND `name` = ?;"
 
     let options = {
 
@@ -210,6 +224,8 @@ app.post('/dashboard/:USERID/new'), (req, res) => {
         args: [''] //An argument which can be accessed in the script using sys.argv[1]
 
     };
+
+    console.log("B")
      
  
     PythonShell.run('run_slither.py', options, function (err, result){
@@ -218,15 +234,94 @@ app.post('/dashboard/:USERID/new'), (req, res) => {
 
         console.log('result: ', result.toString());
 
-        let values = [
+        result = result.toString()
+
+        fullSummary_array = []
+        fullPosition_array = []
+
+        instance_array = []
+        error_array = []
+
+        while (True) {
+
+            // line = readline + remove whitespace
+
+            if (line == "Summary") {
+
+                while (True) {
+
+                    // line = readline + remove whitespace
+
+                    if (line.length > 2) {
+
+                        if (line.substring(0.2) == " - ") {
+
+                            fullSummary_array.push(line)
+
+                        } else {
+
+                            break
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        while (True) {
+
+            // line = readline + remove whitespace
+
+            if (req.body.name == line.substring(0, filename.length)) {
+
+                pullPosition_array.push(line.substring(req.body.name.length + 1).split("-"))
+
+            }
+
+            // if end of file, break and close file
+
+        }
+
+        fullSummary_array.forEach(summary_line => {
+
+            // error_name = grab x where "[x]"
+
+            split_line = summary_line.split(" ")
+
+            // num results = grab x where "(x "
+
+            error_impact = split_line[2].substring(1, split_line[2].length - 2)
+
+            for (let i = 0; 1 < num_results; i++) {
+
+                instance_array.push([null, error_name])
+
+            }
+
+            error_array.push([error_name, error_impact])
+
+        })
+
+        fullPosition_array.forEach((element, index) => {
+
+            instance_array[index][0] = element
+
+        })
+
+
+
+        let reports_values = [
 
             req.params.USERID,
-            report_text,
-            report_analysis
+            req.body.name
         
         ]
 
-        db.query(sql_input_report_assessment, [values], (err, data) => {
+        db.query(sql_reports_query, [reports_values], (err, data) => {
 
             if (err) {
     
@@ -237,6 +332,24 @@ app.post('/dashboard/:USERID/new'), (req, res) => {
             return res.json(["Success", req.params.USERID]);
     
         })
+
+        db.query(sql_get_report_id, [req.params.USERID, req.body.name], (err, data) => {
+
+            instance_array.forEach((element) => {
+
+                db.query(sql_error_instances_query, [data[0], element[0], element[1]], (err, data) => {
+
+
+
+                })
+
+            })
+
+        })
+
+        // db.query(sql_errors_query, [error_array[0], error_array[1], reccomendation], (err, data => {
+
+        // })
 
     });
 

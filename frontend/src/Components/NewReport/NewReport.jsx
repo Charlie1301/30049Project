@@ -26,9 +26,11 @@ const NewReport = () => {
 
     const handleFile = (event) => {
 
-        if (".sol" in event.target.files[0].name) {
+        const temp_file = event.target.files[0]
 
-            setFile(event.target.files[0])
+        if ((temp_file.name).indexOf(".sol") > -1) {
+
+            setFile(temp_file)
 
         }
 
@@ -40,11 +42,13 @@ const NewReport = () => {
 
         formData.append('file', file)
 
+        console.log("A")
+
         axios.post("http://localhost:8081" + location.pathname, file)
         
         .then(res => {
 
-            if (res.data[0] == "Success") {
+            if (res.data[0] === "Success") {
 
                 navigate("/dashboard/" + res.data[1])
 

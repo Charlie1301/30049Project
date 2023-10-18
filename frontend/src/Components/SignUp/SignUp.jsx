@@ -73,7 +73,7 @@ const Signup = () => {
     
                   <H1>Log in to your account</H1>
 
-                  <Label htmlfor="for">Name</Label>
+                  <Label htmlFor="for">Name</Label>
                   <Input
                     type="name"
                     name="name"

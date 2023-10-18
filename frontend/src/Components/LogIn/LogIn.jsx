@@ -49,8 +49,6 @@ const LogIn = () => {
 
         if (res.data === "Success") {
 
-          console.log("email: " + values.email);
-
           axios.get('http://localhost:8081/login/' + values.email)
                 
           .then(res => {

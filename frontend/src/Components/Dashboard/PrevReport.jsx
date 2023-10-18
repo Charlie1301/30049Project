@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { Link , useLocation} from 'react-router-dom';
 import DataTable from 'react-data-table-component'
@@ -10,21 +10,19 @@ const PrevReport = () => {
 
   const location = useLocation()
 
-  const data =  axios.get("http://localhost:8081" + location.pathname)
+  const path = location.pathname
 
-  .then(function(response) {
+  const [records, setRecords] = useState();
 
-    return response
+  axios.get("http://localhost:8081" + path).then(res => setRecords(res.data)).catch(err => console.log(err));
 
-  })
-
-  const [records, setRecords] = useState(data);
+  console.log(records)
 
   const columns = [
     {
       name: 'Report Name',
       selector: row => (
-        <Link to="/reportanalysis">{row.name}</Link>
+        <Link to={"/reportanalysis/" + row.userID + "/" + row.reportID}>{row.name}</Link>
       ),
       sortable: true
     },
@@ -52,15 +50,15 @@ const PrevReport = () => {
 
     <div className="prev-report-container">
 
-    <i class="fa fa-heart"></i>
+    <i className="fa fa-heart"></i>
 
       <Icon to="/">FOO</Icon>
 
-      <div class="search-box">
+      <div className="search-box">
 
-        <button class="btn-search"><FaSearch /></button>
+        <button className="btn-search"><FaSearch /></button>
 
-        <input type="text" class="input-search" placeholder="Type to Search..." onChange={handleFilter}/>
+        <input type="text" className="input-search" placeholder="Type to Search..." onChange={handleFilter}/>
 
       </div>
 
