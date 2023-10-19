@@ -26,11 +26,15 @@ const NewReport = () => {
 
     const handleFile = (event) => {
 
+        console.log("Handling file")
+
         const temp_file = event.target.files[0]
 
         if ((temp_file.name).indexOf(".sol") > -1) {
 
             setFile(temp_file)
+
+            console.log("File handled")
 
         }
 
@@ -38,13 +42,19 @@ const NewReport = () => {
     
     const handleSubmit = () => {
 
+        console.log("Handling submit")
+
         const formData = new FormData()
 
         formData.append('file', file)
 
-        console.log("A")
+        console.log("Formdata handled")
 
-        axios.post("http://localhost:8081" + location.pathname, file)
+        console.log(location.pathname)
+
+        console.log('http://localhost:8081' + location.pathname)
+
+        axios.post('http://localhost:8081' + location.pathname, file)
         
         .then(res => {
 
@@ -59,6 +69,8 @@ const NewReport = () => {
             }
 
         })
+
+        .catch(err => console.log(err))
 
     }
 

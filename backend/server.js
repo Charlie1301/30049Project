@@ -11,12 +11,38 @@ const {PythonShell} =require('python-shell');
 app.use(cors());
 app.use(express.json());
 
+const connection = mysql.createConnection({
+
+    host: "localhost",
+    user: "root",
+    password: "",
+
+});
+
+//connection.connect(function(err) {
+
+    //if (err) throw err;
+
+    //connection.query("DROP DATABASE IF EXISTS `project-30049`;", function (err, result) {
+
+        //if (err) throw err;
+
+   // })
+
+    //connection.query("CREATE DATABASE `project-30049`;", function (err, result) {
+
+    //    if (err) throw err;
+
+    //});
+
+//});
+
 const db = mysql.createConnection({
 
     host: "localhost",
     user: "root",
     password: "",
-    database: "project-cos20049-authentication"
+    database: "project-30049"
 
 });
 
@@ -34,7 +60,7 @@ db.query("CREATE TABLE `error_instances` (`reportID` INT NOT NULL, `position` TE
 
 db.query("DROP TABLE IF EXISTS errors;")
 
-db.query("CREATE TABLE `errors` (`error` TEXT(30) NOT NULL, `reccomendation` TEXT(100) NOT NULL, UNIQUE(error);")
+db.query("CREATE TABLE `errors` (`error` TEXT(30) NOT NULL, `recomendation` TEXT(100) NOT NULL, UNIQUE(`error`));")
 
 app.post('/signup', (req, res) => {
 
@@ -112,7 +138,6 @@ app.post('/login', (req, res) => {
 
                 if (response) {
 
-                    console.log("success")
                     return res.json("Success");
 
                 }
@@ -171,6 +196,8 @@ app.get('/login/:email', (req, res) => {
 
 app.get('/dashboard/:USERID', (req, res) => {
 
+    // console.log("A")
+
     const sql_get_report_ids = "SELECT reportID, userID, date FROM reports WHERE `userID` = ?;";
 
     let userid = req.params.USERID
@@ -185,6 +212,8 @@ app.get('/dashboard/:USERID', (req, res) => {
 
     db.query(sql_get_report_ids, [userid], (err__, data__) => {
 
+        // console.log("B: " + data__)
+
         if (err__) {
 
             return res.json("ERROR");
@@ -193,11 +222,13 @@ app.get('/dashboard/:USERID', (req, res) => {
 
         if (data__.length > 0) {
 
-            console.log(data__)
+            // console.log("C")
 
             return data__;
 
         } else {
+
+            // console.log("D")
 
             return res.json("zero length");
 
@@ -207,34 +238,60 @@ app.get('/dashboard/:USERID', (req, res) => {
 
 });
 
-app.post('/dashboard/:USERID/new'), (req, res) => {
+
+app.post('/dashboard/:USERID/new', (req, res) => {
+
+    console.log("api is called")
+
+    let i = 10
 
     const sql_reports_query = "INSERT INTO reports (`userID`, `name`, `reportText`, `reportAnalysis`) VALUES (?);"
 
     const sql_error_instances_query = "INSERT INTO error_instances (`reportID`, `position`, `error`) VALUES (?);"
 
-    const sql_errors_query = "INSERT INTO errors (`error`, `reccomendation`) VALUES (?);"
+    const sql_errors_query = "INSERT INTO errors (`error`, `recomendation`) VALUES (?);"
 
     const sql_get_report_id = "SELECT reportID WHERE `userID` = ? AND `name` = ?;"
 
-    let options = {
+    console.log("A")
 
-        mode: 'text',
-        pythonOptions: ['-u'], // get print results in real-time
-        args: [''] //An argument which can be accessed in the script using sys.argv[1]
+    const runPyScript = async () => {
 
-    };
+        const options = {
 
-    console.log("B")
-     
- 
-    PythonShell.run('run_slither.py', options, function (err, result){
+            mode: 'text',
+            pythonOptions: ['-u'], // get print results in real-time
+            args: [''] //An argument which can be accessed in the script using sys.argv[1]
+        
+        };
 
-        if (err) throw err;
+        const results = await new Promise((resolve, reject) => {
 
-        console.log('result: ', result.toString());
+            PythonShell.run('run_slither.py', options, (err, result) => {
 
-        result = result.toString()
+                if (err) return reject(err);
+
+                else {
+
+                    console.log("python finished")
+                        
+                    console.log(result)
+
+                    return resolve(result)
+
+                }
+
+            })
+            
+        })
+
+        return results
+
+    }
+
+    let scriptResult = runPyScript()
+
+    scriptResult.then(function(result) {
 
         fullSummary_array = []
         fullPosition_array = []
@@ -242,15 +299,19 @@ app.post('/dashboard/:USERID/new'), (req, res) => {
         instance_array = []
         error_array = []
 
-        while (True) {
+        result_index = 0
 
-            // line = readline + remove whitespace
+        while (i == 10) {
+
+            line = result[result_index]
+            if (result_index < length(result) - 1) {line += 1}
 
             if (line == "Summary") {
 
                 while (True) {
 
-                    // line = readline + remove whitespace
+                    line = result[result_index]
+                    if (result_index < length(result) - 1) {line += 1}
 
                     if (line.length > 2) {
 
@@ -272,9 +333,10 @@ app.post('/dashboard/:USERID/new'), (req, res) => {
 
         }
 
-        while (True) {
+        while (i == 10) {
 
-            // line = readline + remove whitespace
+            line = result[result_index]
+            if (result_index < length(result) - 1) {line += 1}
 
             if (req.body.name == line.substring(0, filename.length)) {
 
@@ -282,17 +344,65 @@ app.post('/dashboard/:USERID/new'), (req, res) => {
 
             }
 
-            // if end of file, break and close file
+            if (line = "") { break }
 
         }
 
         fullSummary_array.forEach(summary_line => {
 
+            let enclosed = false
+
+            error_name = ""
             // error_name = grab x where "[x]"
+            summary_line.forEach(character => {
+
+                if (enclosed) {
+
+                    if (character != "]") {
+
+                        error_name = error_name + character
+
+                    } else {
+
+                        enclosed = false
+
+                    }
+
+                } else if (character == "[") {
+
+                    enclosed = true
+
+                }
+
+            })
 
             split_line = summary_line.split(" ")
 
-            // num results = grab x where "(x "
+            enclosed = false
+
+            num_results = ""
+
+            split_line[1].forEach(character => {
+
+                if (!enclosed) {
+
+                    if (character != "(") {
+
+                        if (character == " ") {
+
+                            enclosed = true
+
+                        } else {
+
+                            num_results = num_results + character
+
+                        }
+
+                    }
+
+                }
+
+            })
 
             error_impact = split_line[2].substring(1, split_line[2].length - 2)
 
@@ -318,42 +428,39 @@ app.post('/dashboard/:USERID/new'), (req, res) => {
 
             req.params.USERID,
             req.body.name
-        
+            
         ]
 
         db.query(sql_reports_query, [reports_values], (err, data) => {
 
             if (err) {
-    
+        
                 return res.json(err);
-    
+        
             }
-    
+        
             return res.json(["Success", req.params.USERID]);
-    
+        
         })
 
         db.query(sql_get_report_id, [req.params.USERID, req.body.name], (err, data) => {
 
             instance_array.forEach((element) => {
 
-                db.query(sql_error_instances_query, [data[0], element[0], element[1]], (err, data) => {
-
-
-
-                })
+                db.query(sql_error_instances_query, [data[0], element[0], element[1]], (err, data) => {})
 
             })
 
         })
 
-        // db.query(sql_errors_query, [error_array[0], error_array[1], reccomendation], (err, data => {
+        db.query(sql_errors_query, [error_array[0], error_array[1], reccomendation], (err, data) => {
 
-        // })
+        })
 
-    });
+    })
 
-}
+
+})
 
 app.listen(8081, () => {
 
