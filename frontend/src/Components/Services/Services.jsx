@@ -10,9 +10,9 @@ import {
   P
 } from "./serviStyles";
 
-import Icon1 from "../../Assets/img/svg-1.svg";
-import Icon2 from "../../Assets/img/svg-5.svg";
-import Icon3 from "../../Assets/img/svg-4.svg";
+import Icon1 from "../../Assets/img/svg-1.png";
+import Icon2 from "../../Assets/img/svg-5.png";
+import Icon3 from "../../Assets/img/svg-4.png";
 
 const Services = () => {
   return (

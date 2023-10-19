@@ -71,7 +71,7 @@ const Signup = () => {
     
                 <Form action="" onSubmit={handleSubmit}>
     
-                  <H1>Log in to your account</H1>
+                  <H1>Create an account</H1>
 
                   <Label htmlFor="for">Name</Label>
                   <Input

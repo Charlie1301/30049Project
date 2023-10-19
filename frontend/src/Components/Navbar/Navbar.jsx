@@ -61,21 +61,19 @@ const Navbar = ({ toggle }) => {
               </Item>
 
               <Item>
-                <NavLinks
-                  to="signUp"
-                  className="signUp"
-                  spy={true}
-                  exact="true"
-                  offset={-80}
-                  activeClass="active"
-                >
+              <NavLink to="/SignUp">
                   Sign Up
-                </NavLinks>
+                </NavLink>
               </Item>
 
               <Item>
                 <NavLink to="/prevReports">
                   Previous Reports
+                </NavLink>
+              </Item>
+              <Item>
+                <NavLink to="/newReport">
+                  Create New
                 </NavLink>
               </Item>
             </Menu>

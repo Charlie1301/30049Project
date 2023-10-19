@@ -21,10 +21,13 @@ const Footer = () => {
   return (
     <FooterContainer>
       <Wrapper>
+        {/* LinksContainer contains different sections of links */}
         <LinksContainer>
           <LinksWrapper>
             <LinkItens>
+              {/* LinkTitle is the title for this section of links */}
               <LinkTitle>About Us</LinkTitle>
+              {/* FooterLink represents individual links */}
               <FooterLink to="">Careers</FooterLink>
               <FooterLink to="">Testimonials</FooterLink>
               <FooterLink to="">How it works</FooterLink>
@@ -62,26 +65,22 @@ const Footer = () => {
         <SocialMedia>
           <SMwrap>
             <Logo to="home">FOO</Logo>
+            {/* Copy contains copyright and attribution information */}
             <Copy>
-              ©️ Team 26
+              ©️ Team 2-17 | Swinburne University of Technology
             </Copy>
 
             <SocialIcons>
+              {/* IconLink represents social media icons with links */}
               <IconLink href="" target="_blank">
                 <FaGithub />
               </IconLink>
 
-              <IconLink
-                href=""
-                target="_blank"
-              >
+              <IconLink href="" target="_blank">
                 <FaBehance />
               </IconLink>
 
-              <IconLink
-                href=""
-                target="_blank"
-              >
+              <IconLink href="" target="_blank">
                 <FaLinkedin />
               </IconLink>
 
