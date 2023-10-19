@@ -462,6 +462,51 @@ app.post('/dashboard/:USERID/new', (req, res) => {
 
 })
 
+app.get('/dashboard/:USERID/:REPORTID/name_date', (req, res) => {
+
+    get_name_date = "SELECT name, data FROM reports WHERE reportID = (?);"
+
+    db.query(get_name_date, [req.params.REPORTID], (err, data) => {
+
+        if (err) throw err;
+
+        if (data.length > 0) {
+
+            return res.json(data)
+
+        } else {
+
+            return res.json("zero length")
+
+        }
+
+    })
+
+})
+
+app.get('/dashboard/:USERID/:REPORTID/error_position', (req, res) => {
+
+    get_error_position = "SELECT error, position FROM error_instances WHERE reportID =(?);"
+
+    db.query(get_error_position, [req.params.REPORTID], (err, data) => {
+
+        if (err) throw err;
+
+        if (data.length > 0) {
+
+            return res.json(data)
+
+        } else {
+
+            return res.json("zero length")
+
+        }
+
+    })
+
+})
+
+
 app.listen(8081, () => {
 
     console.log("listening");
