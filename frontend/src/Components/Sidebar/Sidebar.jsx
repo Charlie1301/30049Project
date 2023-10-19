@@ -7,7 +7,8 @@ import {
   Menu,
   SideLinks,
   BtnWrap,
-  SideRoute
+  SideRoute,
+  NavLink
 } from "./SidebarStyles";
 
 const Sidebar = ({ isOpen, toggle }) => {
@@ -29,29 +30,8 @@ const Sidebar = ({ isOpen, toggle }) => {
           >
             About
           </SideLinks>
-          <SideLinks
-            to="discover"
-            onClick={toggle}
-            spy={true}
-            exact="true"
-            offset={-80}
-            activeClass="active"
-          >
-            Discover
-          </SideLinks>
-          <SideLinks
-            to="services"
-            onClick={toggle}
-            spy={true}
-            exact="true"
-            offset={-80}
-            activeClass="active"
-          >
-            Services
-          </SideLinks>
-          <SideLinks
-            to="signUp"
-            className="signUp"
+          <NavLink
+            to="/signup"
             onClick={toggle}
             spy={true}
             exact="true"
@@ -59,7 +39,27 @@ const Sidebar = ({ isOpen, toggle }) => {
             activeClass="active"
           >
             Sign Up
-          </SideLinks>
+          </NavLink>
+          <NavLink
+            to="/prevReports"
+            onClick={toggle}
+            spy={true}
+            exact="true"
+            offset={-80}
+            activeClass="active"
+          >
+            Previous Reports
+          </NavLink>
+          <NavLink
+            to="/newReport"
+            onClick={toggle}
+            spy={true}
+            exact="true"
+            offset={-80}
+            activeClass="active"
+          >
+            Create New
+          </NavLink>
         </Menu>
 
         <BtnWrap>
