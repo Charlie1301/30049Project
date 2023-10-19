@@ -99,7 +99,7 @@ const Signup = () => {
                   />
                   {errors.email && <span> {errors.email} </span> }
     
-                  <Button type="submit">Log In</Button>
+                  <Button type="submit">Sign Up</Button>
                   <p></p>
                   <Link to="/login" className="text-white">Already have an account? Login here.</Link>
                   <Text>Forgot my password</Text>
